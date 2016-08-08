@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+  <meta charset="utf-8">
+  <title>Blockly Demo: JS Interpreter</title>
+  <!--MUST HAVE JS FOR BLOCKY-->
+  <script src="../../blockly_compressed.js"></script>
+
+
+  <script src="../../blocks_compressed.js"></script>
+  <script src="../../javascript_compressed.js"></script>
+  <script src="../../msg/js/en.js"></script>
+  <script src="../../blocks/Rasp/GPIO.js"></script>
+  
+  
+
+<script src="Rpi.js"></script>
+  
+<script src="./a/TemplateData/UnityProgress.js"></script>
+
+</head>
+<body>
+  <div >
+      <canvas  id="canvas" oncontextmenu="event.preventDefault()" height="600px" width="960px"></canvas>
+      <br>
+      
+      <div >
+        <img src="TemplateData/fullscreen.png" width="38" height="38" alt="Fullscreen" title="Fullscreen" onclick="SetFullscreen(1);" />
+      </div>
+      
+    </div>
+    
+    <script type='text/javascript'>
+  var Module = {
+    TOTAL_MEMORY: 507374182,
+    errorhandler: null,     // arguments: err, url, line. This function must return 'true' if the error is handled, otherwise 'false'
+    compatibilitycheck: null,
+    dataUrl: "./a/Release/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.data",
+    codeUrl: "./a/Release/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.js",
+    memUrl: "./a/Release/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.mem",
+  };
+</script>
+<script src="./a/Release/UnityLoader.js"></script>
+
+  
+  
+  
+  <p>
+    <button onclick="parseCode()">Run Code</button>
+    <button onclick="stepCode()" id="stepButton" disabled="disabled">Step JavaScript</button>
+    <button onclick="run_simulation()">Run Simulation</button>
+    <button onclick="stop_simulation()">Stop Simulation</button>
+  </p>
+
+  <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+
+  <xml id="toolbox" style="display: none">
+    <category name="Logic">
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_negate"></block>
+      <block type="logic_boolean"></block>
+    </category>
+    <category name="Loops">
+      <block type="controls_repeat_ext">
+        <value name="TIMES">
+          <block type="math_number">
+            <field name="NUM">1000</field>
+          </block>
+        </value>
+      </block>
+      <block type="controls_whileUntil"></block>
+    </category>
+    <category name="Math">
+      <block type="math_number"></block>
+      <block type="math_arithmetic"></block>
+      <block type="math_single"></block>
+    </category>
+    <category name="Text">
+      <block type="text"></block>
+      <block type="text_length"></block>
+      <block type="text_print"></block>
+      <block type="text_prompt_ext">
+        <value name="TEXT">
+          <block type="text"></block>
+        </value>
+      </block>
+    </category>
+    <category name="Variables" custom="VARIABLE"></category>
+    <category name="Functions" custom="PROCEDURE"></category>
+    <category name="Raspberry pi" >
+      <block type="pinMode"></block>
+      <block type="digitalWrite"></block>
+      <block type="delay"></block>
+    </category>
+  </xml>
+
+
+
+  <xml id="startBlocks" style="display: none">
+    <block type="variables_set" inline="true" x="20" y="20">
+      <field name="VAR">n</field>
+      <value name="VALUE">
+        <block type="math_number">
+          <field name="NUM">1</field>
+        </block>
+      </value>
+      <next>
+        <block type="controls_repeat_ext" inline="true">
+          <value name="TIMES">
+            <block type="math_number">
+              <field name="NUM">4</field>
+            </block>
+          </value>
+          <statement name="DO">
+            <block type="variables_set" inline="true">
+              <field name="VAR">n</field>
+              <value name="VALUE">
+                <block type="math_arithmetic" inline="true">
+                  <field name="OP">MULTIPLY</field>
+                  <value name="A">
+                    <block type="variables_get">
+                      <field name="VAR">n</field>
+                    </block>
+                  </value>
+                  <value name="B">
+                    <block type="math_number">
+                      <field name="NUM">2</field>
+                    </block>
+                  </value>
+                </block>
+              </value>
+            </block>
+          </statement>
+          <next>
+            <block type="text_print" inline="false">
+              <value name="TEXT">
+                <block type="variables_get">
+                  <field name="VAR">n</field>
+                </block>
+              </value>
+            </block>
+          </next>
+        </block>
+      </next>
+    </block>
+  </xml>
+
+  <script>
+    var workspace = Blockly.inject('blocklyDiv',
+        {media: '../../media/',
+         toolbox: document.getElementById('toolbox')});
+    Blockly.Xml.domToWorkspace(document.getElementById('startBlocks'),
+                               workspace);
+
+    var myInterpreter = null;
+
+    
+    var highlightPause = false;
+
+    function highlightBlock(id) {
+      workspace.highlightBlock(id);
+      highlightPause = true;
+    }
+
+    function parseCode() {
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+      alert('Ready to execute this code:\n\n' + code);
+      eval(code);
+    }
+
+    function run_simulation()
+    {
+      SendMessage("Directional Light","run_simulation");
+
+    }
+
+
+    function stop_simulation()
+    {
+        SendMessage("Directional Light","stop_simulation");
+    }
+
+    function stepCode() {
+      try {
+        var ok = myInterpreter.step();
+      } finally {
+        if (!ok) {
+          // Program complete, no more code to execute.
+          document.getElementById('stepButton').disabled = 'disabled';
+          return;
+        }
+      }
+      if (highlightPause) {
+        // A block has been highlighted.  Pause execution here.
+        highlightPause = false;
+      } else {
+        // Keep executing until a highlight statement is reached.
+        stepCode();
+      }
+    }
+  </script>
+
+</body>
+</html>

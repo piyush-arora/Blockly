@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <script src="TemplateData/UnityProgress.js"></script>
+  </head>
+
+  <body >
+    <div >
+      <canvas  id="canvas" oncontextmenu="event.preventDefault()" height="600px" width="960px"></canvas>
+      <br>
+      
+      <div >
+        <img src="TemplateData/fullscreen.png" width="38" height="38" alt="Fullscreen" title="Fullscreen" onclick="SetFullscreen(1);" />
+      </div>
+      
+    </div>
+    
+    <script type='text/javascript'>
+  var Module = {
+    TOTAL_MEMORY: 1073741824,
+    errorhandler: null,			// arguments: err, url, line. This function must return 'true' if the error is handled, otherwise 'false'
+    compatibilitycheck: null,
+    dataUrl: "Release/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.data",
+    codeUrl: "Release/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.js",
+    memUrl: "Release/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.mem",
+  };
+</script>
+<script src="Release/UnityLoader.js"></script>
+
+  </body>
+</html>

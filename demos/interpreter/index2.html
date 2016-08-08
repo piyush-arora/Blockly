@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+
+    <script src="./b/TemplateData/UnityProgress.js"></script>
+  </head>
+  <body >
+    <div >
+      <canvas  id="canvas" oncontextmenu="event.preventDefault()" height="600px" width="960px"></canvas>
+      <br>
+    </div>
+    <script type='text/javascript'>
+  var Module = {
+    TOTAL_MEMORY: 1073741824,
+    errorhandler: null,			// arguments: err, url, line. This function must return 'true' if the error is handled, otherwise 'false'
+    compatibilitycheck: null,
+    dataUrl: "./b/Release/WebOutput.data",
+    codeUrl: "./b/Release/WebOutput.js",
+    memUrl: "./b/Release/WebOutput.mem",
+    
+  };
+</script>
+<script src="./b/Release/UnityLoader.js"></script>
+
+  </body>
+</html>

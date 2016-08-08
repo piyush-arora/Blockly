@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <!-- MUST BE PRESENT-->
+
+  <script src="acorn_interpreter.js"></script>
+
+  <script src="../../blockly_compressed.js"></script>
+
+  <!-- BLOCKS NEEDED FOR APP-->
+  <script src="../../blocks_compressed.js"></script>
+  
+  <!--MY SPECIFIC BLOCKS-->
+  <script src="../../blocks/Rasp/GPIO.js"></script>
+
+  <!-- MY BLOCKS CODE-->
+  <script src="../../generators/javascript/GPIO.js"></script>
+
+  <script src="../../msg/js/en.js"></script>
+  
+
+
+  <script src="../../javascript_compressed.js"></script>
+
+
+
+
+  
+    <script src="./a/TemplateData/UnityProgress.js"></script>
+    <script src="./a/Rpi/rpi.js"></script>
+  
+</head>
+
+<body onload="doSomething()">
+
+<div >
+      <canvas  id="canvas" oncontextmenu="event.preventDefault()" height="600px" width="960px"></canvas>
+      <br>
+      
+    </div>
+    
+    <script type='text/javascript'>
+  var Module = {
+    TOTAL_MEMORY: 268435456,
+    errorhandler: null,     // arguments: err, url, line. This function must return 'true' if the error is handled, otherwise 'false'
+    compatibilitycheck: null,
+    dataUrl: "./a/Release/aaaaaaaaaaaa.data",
+    codeUrl: "./a/Release/aaaaaaaaaaaa.js",
+    memUrl: "./a/Release/aaaaaaaaaaaa.mem",
+  };
+</script>
+<script>
+
+  function pinMode(p,m)
+{
+  var argument = {
+      pin:p,
+      mode:m
+      
+    }
+    argument = JSON.stringify(argument);
+    SendMessage("a","pinMode",argument);
+
+}
+
+function digitalWrite(p,s)
+{
+    var argument = {
+      pin:p,
+      status:s
+      
+    }
+    argument = JSON.stringify(argument);
+    SendMessage("a","digitalWrite",argument);
+
+}
+</script>
+
+<script src="./a/Release/UnityLoader.js"></script>
+<button onclick="parseCode()">Parse JavaScript</button>
+<!--SIZE  OF WORK SPACE-->
+  <div id="blocklyDiv" style="height: 380px; width: 800px;"></div>
+
+<!--TOOL BOX STRUCTURE-->
+
+  <xml id="toolbox" style="display: none">
+    
+
+    <category name="Logic">
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_negate"></block>
+      <block type="logic_boolean"></block>
+    </category>
+    <category name="Loops">
+      <block type="controls_repeat_ext">
+        <value name="TIMES">
+          <block type="math_number">
+            <field name="NUM">10</field>
+          </block>
+        </value>
+      </block>
+      <block type="controls_whileUntil"></block>
+    </category>
+    <category name="Math">
+      <block type="math_number"></block>
+      <block type="math_arithmetic"></block>
+      <block type="math_single"></block>
+    </category>
+    <category name="Text">
+      <block type="text"></block>
+      <block type="text_length"></block>
+      <block type="text_print"></block>
+      <block type="text_prompt_ext">
+        <value name="TEXT">
+          <block type="text"></block>
+        </value>
+      </block>
+    </category>
+    <category name="Variables" custom="VARIABLE"></category>
+    <category name="Functions" custom="PROCEDURE"></category>
+      
+    <category name="Raspberry pi" >
+          <block type="pinMode"></block>
+    
+      <block type="digitalWrite"></block>
+
+      <block type="delay"></block>
+
+    </category>
+
+    
+  </xml>
+
+
+
+
+  <script>
+    var workspace = Blockly.inject('blocklyDiv',
+        {media: '../../media/',
+         toolbox: document.getElementById('toolbox')});
+
+    //var code = Blockly.JavaScript.workspaceToCode(workspace);
+
+//    alert(code);
+
+
+    
+  </script>
+
+
+
+
+  <script type="text/javascript">
+
+function parseCode() {
+    //  var code = Blockly.JavaScript.workspaceToCode(workspace);
+     
+     // alert('Ready to execute this code:\n\n' + code);
+      
+
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+      myInterpreter = new Interpreter(code, initApi);
+
+      //alert('Ready to execute this code:\n\n' + code);
+      
+      
+    }
+
+
+function initApi(interpreter, scope) {
+      // Add an API function for the alert() block.
+      var wrapper = function(text) {
+        text = text ? text.toString() : '';
+        return interpreter.createPrimitive(alert(text));
+      };
+      interpreter.setProperty(scope, 'alert',
+          interpreter.createNativeFunction(wrapper));
+
+      // Add an API function for the prompt() block.
+      var wrapper = function(text) {
+        text = text ? text.toString() : '';
+        return interpreter.createPrimitive(prompt(text));
+      };
+      interpreter.setProperty(scope, 'prompt',
+          interpreter.createNativeFunction(wrapper));
+
+      // Add an API function for highlighting blocks.
+      var wrapper = function(id) {
+        id = id ? id.toString() : '';
+        return interpreter.createPrimitive(highlightBlock(id));
+      };
+      interpreter.setProperty(scope, 'highlightBlock',
+          interpreter.createNativeFunction(wrapper));
+    }
+
+  </script>
+
+<script>
+  function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
+function doSomething()
+{
+  console.log("piyush");
+  sleep(5000);
+  console.log("is");
+}
+</script>
+  
+</body>
+</html>
